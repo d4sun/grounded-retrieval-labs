@@ -38,10 +38,12 @@ dev = [
     "reportlab>=4.0",          # only used by the sample-corpus generator's rich path
 ]
 
-[project.scripts]
-grl-ingest = "scripts.run_ingest:main"
-grl-query = "scripts.run_query:main"
-grl-eval = "scripts.run_eval:main"
+# Run the CLIs as modules from the repo root, e.g.:
+#   python -m scripts.run_ingest --config config/default.yaml
+#   python -m scripts.run_query "relay control wiring"
+#   python -m scripts.run_eval
+# (No console_scripts entry points: the scripts/ package lives at the repo root for
+#  `python -m` use and isn't part of the installed src/ distribution.)
 
 [tool.setuptools.packages.find]
 where = ["src"]
