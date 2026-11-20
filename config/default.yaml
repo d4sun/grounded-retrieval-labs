@@ -1,0 +1,70 @@
+# Grounded Retrieval — Lab A configuration.
+# One place to flip every stage between the free model path and the offline fallback.
+# Backends that say "auto" pick the best available at runtime and log what they chose.
+
+corpus:
+  input_dir: data/sample        # where source PDFs live (use data/raw for a real corpus)
+  work_dir: data/artefacts      # extracted figure/table images + derived json land here
+  index_dir: data/index         # the vector index + metadata
+  max_pages: 400                # keep the lab iterable; a few hundred pages is plenty
+
+parsing:
+  loader:
+    backend: auto               # auto | docling | pymupdf
+  ocr:
+    backend: auto               # auto | tesseract | off
+    min_mean_confidence: 55.0   # pages below this confidence are flagged for review, not indexed
+    max_garbled_ratio: 0.30     # fraction of non-wordlike chars that fails the quality gate
+    languages: eng
+
+extraction:
+  figures:
+    min_width: 48               # ignore tiny icons/rules that aren't real figures
+    min_height: 48
+    render_dpi: 150             # dpi when rendering a figure region to an image
+  tables:
+    backend: auto               # auto | camelot | pdfplumber
+    min_rows: 2
+    min_cols: 2
+
+enrichment:
+  captioner:
+    backend: auto               # auto | openrouter | offline
+    model: openrouter/free      # auto-router; accepts images. Or e.g. qwen/qwen2.5-vl-7b-instruct:free
+    cache_dir: .cache/captions  # captions are cached so re-runs are free
+    max_figures: null           # cap number of figures captioned per run (null = no cap)
+    prompt: >-
+      Describe this technical figure for search: what component or system it shows,
+      any visible labels, callouts, and part numbers. Be concise and literal.
+  tables:
+    linearise: markdown         # markdown | kv  (how a table becomes searchable text)
+
+indexing:
+  embedder:
+    backend: auto               # auto | local | hashing
+    model: BAAI/bge-small-en-v1.5
+    dim: 384                    # used by the hashing fallback; local model dictates its own
+    batch_size: 32
+    normalize: true
+  index:
+    backend: auto               # auto | faiss | numpy
+  chunking:
+    max_chars: 1200             # prose chunk size; tables/figure-captions are never split
+    overlap: 150
+
+retrieval:
+  top_k: 8
+  fusion:
+    bm25: true                  # fuse lexical BM25 with vector scores (helps exact part numbers)
+    alpha: 0.5                  # weight on vector score; (1-alpha) on BM25
+
+answering:
+  caption_backend: auto         # auto | openrouter | offline  (one-line grounded caption on figure answers)
+  fail_closed: true             # never present a unit that lacks provenance as a sourced answer
+
+evaluation:
+  k_values: [1, 3, 5, 10]
+  by_type: true                 # break recall@k / MRR out by text | figure | table
+
+logging:
+  level: INFO

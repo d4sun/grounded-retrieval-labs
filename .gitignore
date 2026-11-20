@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Secrets — never commit API keys
+.env
+*.key
+
+# Data: raw corpora and derived artefacts are large / licence-encumbered.
+# The synthetic sample under data/sample/ IS committed (see !rules below).
+data/raw/*
+!data/raw/.gitkeep
+data/index/
+data/artefacts/
+.cache/
+caption_cache/
+
+# Keep the committed synthetic sample
+!data/sample/

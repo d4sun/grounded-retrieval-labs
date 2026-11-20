@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grounded-retrieval"
+version = "0.1.0"
+description = "Multimodal retrieval over technical manuals: retrieve-by-text, answer-with-artefact (Course 3 · Day 2 · Lab A)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "AI Engineering Transformation Program" }]
+
+# Core deps are intentionally light so the offline smoke test installs fast and
+# runs with no GPU, no API key, and no dataset download.
+dependencies = [
+    "numpy>=1.24",
+    "pyyaml>=6.0",
+    "pdfplumber>=0.11",
+    "pymupdf>=1.24",
+    "rank-bm25>=0.2.2",
+]
+
+[project.optional-dependencies]
+# The real free stack. Heavier (torch, faiss) — install when you want the
+# production-grade models instead of the deterministic offline fallbacks.
+free = [
+    "sentence-transformers>=2.6",
+    "faiss-cpu>=1.8",
+    "openai>=1.30",            # simplest OpenRouter client (same wire format)
+    "docling>=1.0",
+    "camelot-py>=0.11",
+    "pytesseract>=0.3.10",
+    "pillow>=10.0",
+]
+dev = [
+    "pytest>=8.0",
+    "reportlab>=4.0",          # only used by the sample-corpus generator's rich path
+]
+
+[project.scripts]
+grl-ingest = "scripts.run_ingest:main"
+grl-query = "scripts.run_query:main"
+grl-eval = "scripts.run_eval:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
