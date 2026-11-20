@@ -7,6 +7,7 @@ end-to-end entrypoints and ``grounded_retrieval.provenance`` for the data backbo
 __version__ = "0.1.0"
 
 from .config import Config, load_config  # noqa: F401
+from .pipeline import Pipeline  # noqa: F401
 from .provenance import (  # noqa: F401
     BBox,
     Document,
@@ -24,6 +25,7 @@ __all__ = [
     "__version__",
     "Config",
     "load_config",
+    "Pipeline",
     "BBox",
     "Document",
     "Page",

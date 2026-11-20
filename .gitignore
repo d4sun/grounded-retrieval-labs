@@ -15,7 +15,6 @@ venv/
 *.key
 
 # Data: raw corpora and derived artefacts are large / licence-encumbered.
-# The synthetic sample under data/sample/ IS committed (see !rules below).
 data/raw/*
 !data/raw/.gitkeep
 data/index/
@@ -23,5 +22,7 @@ data/artefacts/
 .cache/
 caption_cache/
 
-# Keep the committed synthetic sample
-!data/sample/
+# The synthetic sample is generated on demand (scripts.make_sample_corpus,
+# or automatically by run_ingest) — don't commit the generated blobs.
+data/sample/*
+!data/sample/.gitkeep
