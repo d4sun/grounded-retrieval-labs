@@ -24,6 +24,11 @@ dependencies = [
 [project.optional-dependencies]
 # The real free stack. Heavier (torch, faiss) — install when you want the
 # production-grade models instead of the deterministic offline fallbacks.
+#
+# IMPORTANT: install these via `bash scripts/install_free.sh` (or `make install-free`),
+# NOT a bare `pip install -e ".[free]"`. sentence-transformers pulls PyTorch, and the
+# default torch wheel on Linux is the CUDA build (~1-2 GB of nvidia-* wheels). The script
+# installs CPU-only torch first so no CUDA is downloaded.
 free = [
     "sentence-transformers>=2.6",
     "faiss-cpu>=1.8",

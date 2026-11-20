@@ -55,11 +55,31 @@ Set `free_only: false` only if you deliberately want to point at a paid model.
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -e .                 # core: numpy, pdfplumber, pymupdf, pyyaml, rank-bm25
-pip install -e ".[free]"         # add: sentence-transformers, faiss-cpu, openai, docling, camelot-py, pytesseract
-# Tesseract binary (OCR) is a system package, e.g.  sudo apt-get install tesseract-ocr
 ```
 
-The **core** install alone is enough to run the offline smoke test.
+The **core** install alone is enough to run the offline smoke test — **no torch, no CUDA, no key.**
+
+### Optional: the real free models (CPU-only)
+
+The `[free]` extras add `sentence-transformers`, which depends on PyTorch. A plain
+`pip install -e ".[free]"` pulls the **CUDA** build of torch (~1–2 GB of `nvidia-*` wheels)
+even on a machine with no GPU. This lab is CPU-only, so install CPU PyTorch **first** and the
+extras reuse it:
+
+```bash
+bash scripts/install_free.sh      # CPU torch from PyTorch's CPU index, then the extras
+# equivalently:  make install-free
+# Tesseract binary (OCR) is a system package, e.g.  sudo pacman -S tesseract  /  apt-get install tesseract-ocr
+```
+
+Under the hood that is just:
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install -e ".[free]"
+```
+
+CPU is plenty here — `bge-small-en-v1.5` embeds a few-hundred-page corpus in seconds.
 
 ## Quickstart (offline, no key)
 
