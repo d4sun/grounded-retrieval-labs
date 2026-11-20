@@ -127,7 +127,7 @@ src/grounded_retrieval/
 scripts/               # CLI entrypoints + synthetic corpus generator
 tests/                 # pytest smoke + unit tests (run fully offline)
 config/default.yaml    # one place to flip free ↔ offline backends
-data/                  # raw/ (gitignored) and sample/ (synthetic, committed)
+data/                  # raw/ and sample/ are gitignored; sample is generated on demand
 ```
 
 ## Licence note
