@@ -19,6 +19,7 @@ import base64
 from pathlib import Path
 
 from ..config import Config
+from ..free_guard import check_free_model
 from ..logging_utils import get_logger
 from ..provenance import Unit, UnitType
 from .cache import CaptionCache
@@ -47,11 +48,18 @@ class Captioner:
                         "Describe this technical figure for search.")).split()
         )
         self.max_figures = cfg.get("enrichment.captioner.max_figures", None)
+        self.free_only = bool(cfg.get("enrichment.captioner.free_only", True))
         self.backend = self._resolve(cfg.get("enrichment.captioner.backend", "auto"))
+        # free-tools guard: if the configured model isn't a free OpenRouter slug and
+        # free_only is on, refuse the paid call and caption offline instead.
+        if self.backend == "openrouter" and not check_free_model(
+                self.model, free_only=self.free_only, where="captioner"):
+            self.backend = "offline"
         cache_dir = cfg.get("enrichment.captioner.cache_dir", ".cache/captions")
         self.cache = CaptionCache(cache_dir)
         self._client = None
-        log.info("captioner backend=%s model=%s", self.backend, self.model)
+        log.info("captioner backend=%s model=%s free_only=%s",
+                 self.backend, self.model, self.free_only)
 
     @staticmethod
     def _resolve(backend: str) -> str:
