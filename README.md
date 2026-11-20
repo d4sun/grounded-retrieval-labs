@@ -37,6 +37,12 @@ This means `make smoke` runs the **entire** ingest → retrieve → answer → e
 API key, no dataset download, and no GPU** — on a tiny synthetic manual generated locally. Swap the
 fallbacks for the real free models by installing the extras and setting `OPENROUTER_API_KEY`.
 
+**Free is enforced, not just assumed.** The only place a paid resource could enter is an OpenRouter
+model slug, so `enrichment.captioner.free_only: true` (the default) refuses any model that isn't a
+free `:free` slug (or `openrouter/free`) and falls back to the offline captioner instead of
+spending money. Everything else — embeddings, index, parsing, OCR, tables — is local open-source.
+Set `free_only: false` only if you deliberately want to point at a paid model.
+
 > **Privacy note (state this in the room):** free endpoints may log/train on inputs. Use the public
 > datasets for the lab; never send confidential manuals to a free endpoint — for real data, set
 > `enrichment.captioner.backend: local` / `offline` and `indexing.embedder.backend: local` so no

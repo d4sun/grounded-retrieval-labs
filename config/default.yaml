@@ -30,6 +30,7 @@ extraction:
 enrichment:
   captioner:
     backend: auto               # auto | openrouter | offline
+    free_only: true             # refuse any non-':free' OpenRouter model (cost guard); offline otherwise
     model: openrouter/free      # auto-router; accepts images. Or e.g. qwen/qwen2.5-vl-7b-instruct:free
     cache_dir: .cache/captions  # captions are cached so re-runs are free
     max_figures: null           # cap number of figures captioned per run (null = no cap)
