@@ -7,5 +7,31 @@ end-to-end entrypoints and ``grounded_retrieval.provenance`` for the data backbo
 __version__ = "0.1.0"
 
 from .config import Config, load_config  # noqa: F401
+from .provenance import (  # noqa: F401
+    BBox,
+    Document,
+    Page,
+    Provenance,
+    Unit,
+    UnitType,
+    doc_id_from_path,
+    make_unit_id,
+    read_units_jsonl,
+    write_units_jsonl,
+)
 
-__all__ = ["__version__", "Config", "load_config"]
+__all__ = [
+    "__version__",
+    "Config",
+    "load_config",
+    "BBox",
+    "Document",
+    "Page",
+    "Provenance",
+    "Unit",
+    "UnitType",
+    "doc_id_from_path",
+    "make_unit_id",
+    "read_units_jsonl",
+    "write_units_jsonl",
+]
